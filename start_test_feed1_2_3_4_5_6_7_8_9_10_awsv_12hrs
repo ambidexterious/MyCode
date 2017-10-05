@@ -1,0 +1,49 @@
+#!/bin/bash
+
+testdir=$(printf "%s_%s" "TEST" "$(date +%m%d%H%M%S)")
+
+mkdir ./logs/$testdir
+
+nohup ./test_awsv 720 $testdir &
+sleep 5
+
+#values below are for 100 hrs periods
+nohup ./test_feed1 720 $testdir &
+sleep 5
+
+nohup ./test_feed2 720 $testdir &
+
+sleep 5
+
+nohup ./test_feed3 720 $testdir &
+sleep 5
+
+
+nohup ./test_feed4 720 $testdir &
+sleep 5
+
+
+nohup ./test_feed5 720 $testdir &
+sleep 5
+
+nohup ./test_feed6 720 $testdir &
+
+sleep 5
+
+nohup ./test_feed7 720 $testdir &
+
+sleep 5
+
+nohup ./test_feed8 720 $testdir &
+
+sleep 5
+nohup ./test_feed9 720 $testdir &
+
+sleep 5
+
+nohup ./test_feed10 720 $testdir &
+#sleep 1
+
+
+exit
+

@@ -1,0 +1,47 @@
+#!/bin/bash
+TIME=120
+testdir=$(printf "%s_%s" "TEST" "$(date +%m%d%H%M%S)")
+mkdir ./logs/$testdir
+
+sleep 5
+
+#start pidstat monitoring
+nohup ./collect_all $TIME $testdir &
+
+#first parameter is test duration in minutes 1.5 hrs is 90 min
+nohup ./test_awsv $TIME $testdir &
+
+
+#nohup ./test_feed1 $TIME $testdir &
+#sleep 5
+
+#nohup ./test_feed2 $TIME $testdir &
+
+#sleep 5
+
+#nohup ./test_feed3 $TIME $testdir &
+#sleep 5
+
+#nohup ./test_feed4 $TIME $testdir &
+#sleep 1
+
+
+#nohup ./test_feed5 $TIME $testdir &
+#sleep 1
+
+#nohup ./test_feed6 $TIME $testdir &
+
+#nohup ./test_feed7 90 $testdir &
+
+
+#nohup ./test_feed8 90 $testdir &
+
+#nohup ./test_feed9 90 $testdir &
+
+
+#nohup ./test_feed10 90 $testdir &
+#sleep 1
+
+
+exit
+

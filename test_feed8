@@ -1,0 +1,52 @@
+#!/bin/bash
+FILES="/opt/data/stage01/PT/data/TEST_DATA/feed8/new*.txt"
+FEEDNAME="feed8"
+EXEDIR="/opt/data/stage01/PT/etl/utils/etlcl/libexec"
+
+rand=0
+#iterator=$1
+secs=$(($1*60))                         # Set interval (duration) in seconds.
+echo "Total runtime seconds is "
+echo $secs
+endTime=$(( $(date +%s) + secs )) # Calculate end time.
+
+
+logfname=$(printf "%s_%s" "$FEEDNAME" "$(date +%m%d%H%M%S)")
+
+while [ $(date +%s) -lt $endTime ]; do
+#for((i=0;i<iterator;i++))
+
+
+for f in `ls $FILES| sort -R`
+do
+
+if [ $(date +%s) -gt $endTime ]
+then
+break
+fi
+
+
+echo "file $f"
+#add file size to logs
+echo "file $f" >> ./logs/$2/$logfname.log
+file_size_mb=`du -k --block-size=1M "$f" | cut -f1`
+echo "filesize $file_size_mb"  >> ./logs/$2/$logfname.log
+echo "$(date)" >> ./logs/$2/$logfname.log
+echo "filesize $file_size_mb"
+echo "logfname $logfname"
+
+#ingest the file
+((time $EXEDIR/./etl-ingest-file.sh feed8 $f -e) >> ./logs/$2/$logfname.log  2>&1) &
+
+#add random sleep
+rand=$(printf "%s" "$(shuf -i 144-432 -n 1)")
+echo "This is the random sleep"
+echo $rand
+sleep $rand
+
+done
+
+done
+
+exit
+

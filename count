@@ -1,0 +1,12 @@
+#!/bin/bash
+count=0
+
+for((i=0;i<10;i++))
+do
+if [ $count -eq 5 ]
+then 
+break
+fi
+count=$((count+1))
+echo $count
+done

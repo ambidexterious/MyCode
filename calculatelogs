@@ -1,0 +1,36 @@
+#!/bin/bash
+file=$1
+#calculate average file size
+cat $1 | grep size | awk -F ' ' '{sum+=$2} END {print "File size MB AVG=",sum/NR}'
+
+#calculate real time
+real_summinutes=`cat $1 | grep real | cut -d $'\t' -f 2 |  awk -F 'm' '{summinutes+=$1} END {print summinutes}'`
+real_sumseconds=`cat $1 | grep real | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 1 | awk -F 'm' '{sumseconds+=$1} END {print sumseconds}'`
+real_summiliseconds=`cat $1 | grep real | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 2 | awk -F 'm' '{summiliseconds+=$1} END {print summiliseconds}'`
+count=`cat $1 | grep real | wc -l`
+real_average=$(((real_summinutes*60*1000+real_sumseconds*1000+real_summiliseconds)/count))
+#echo "Real time sum minutes is $real_summinutes"
+#echo "Real time sum seconds is $real_sumseconds"
+#echo "Real time sum mili is $real_summiliseconds"
+#echo "The count is $count"
+echo "Real time average in mili sec is $real_average"
+
+
+#calculate user time
+user_summinutes=`cat $1 | grep user | cut -d $'\t' -f 2 |  awk -F 'm' '{summinutes+=$1} END {print summinutes}'`
+user_sumseconds=`cat $1 | grep user | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 1 | awk -F 'm' '{sumseconds+=$1} END {print sumseconds}'`
+user_summiliseconds=`cat $1 | grep user | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 2 | awk -F 'm' '{summiliseconds+=$1} END {print summiliseconds}'`
+count=`cat $1 | grep user | wc -l`
+user_average=$(((user_summinutes*60*1000+user_sumseconds*1000+user_summiliseconds)/count))
+echo "User time average in mili sec is $user_average"
+
+#calculate sys time
+sys_summinutes=`cat $1 | grep sys | cut -d $'\t' -f 2 |  awk -F 'm' '{summinutes+=$1} END {print summinutes}'`
+sys_sumseconds=`cat $1 | grep sys | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 1 | awk -F 'm' '{sumseconds+=$1} END {print sumseconds}'`
+sys_summiliseconds=`cat $1 | grep sys | cut -d $'\t' -f 2 |  cut -d 'm' -f 2 | cut -d '.' -f 2 | awk -F 'm' '{summiliseconds+=$1} END {print summiliseconds}'`
+count=`cat $1 | grep sys | wc -l`
+sys_average=$(((sys_summinutes*60*1000+sys_sumseconds*1000+sys_summiliseconds)/count))
+echo "Sys time average in mili sec is $sys_average"
+
+exit
+

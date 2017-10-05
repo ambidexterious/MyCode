@@ -1,0 +1,68 @@
+#!/bin/bash
+
+while [[ $# -gt 1 ]]
+do
+key="$1"
+
+case $key in
+    -p|--pid)
+    PID="$2"
+    shift # past argument
+    ;; 
+    -c|--count)
+    COUNT="$2"
+    shift #past arguement
+    ;;
+    -f|--filterby)
+    FILTER="$2"
+    shift # past argument
+    ;;
+    -s|--statfile)
+    STAT_FILE="$2"
+    shift # past argument
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+if [ -z "${PID}" ]; then
+    echo "USAGE: procstat.sh -p <pid> [-f <filter by> -s <stat file name>]"
+    exit 1
+fi
+
+echo PID  = "${PID}"
+echo FILTER  = "${FILTER}"
+echo STAT FILE  = "${STAT_FILE}"
+echo COUNT = "${COUNT}"
+
+if [ -z "${FILTER}" ]; then
+    FILTER="147"
+fi
+
+if [ -z "${STAT_FILE}" ]; then
+    STAT_FILE="procstat_${PID}.csv"
+fi
+
+if [ -z "${COUNT}" ]; then
+     COUNT=0
+fi
+#Check if output file exists. If not - create it with header
+if [ ! -f ${STAT_FILE} ]; then
+    echo "Empty,Time,PID,%usr,%system,%guest,%CPU,CPU,minflt/s,majflt/s,VSZ,RSS,%MEM,kB_rd/s,kB_wr/s,kB_ccwr/s,Command" > ${STAT_FILE}
+fi
+
+echo "Procstat started for PID: ${PID} into file: ${STAT_FILE}"
+
+#Run stat
+#pidstat -duhr -p ${PID} 2 | grep ${FILTER}  >> ${STAT_FILE}
+#pidstat -duhr -p ${PID} 2 | grep ${FILTER} | sed -r 's/[ ]+/,/g' | sed -e 's/^[,]*//' >> ${STAT_FILE}
+pidstat -duhr -p ${PID} 2 ${COUNT} | grep ${FILTER} | tr -s ' ' ',' >> ${STAT_FILE}
+
+
+echo "Procstat for PID: ${PID} ended"
+
+exit 0
+

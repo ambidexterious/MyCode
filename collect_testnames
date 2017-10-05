@@ -1,0 +1,24 @@
+#!/bin/bash
+#count=$(($1*30)) 
+dfn=$(printf "%s_%s" "tmp" "$(date +%m%d%H%M%S)")
+dfn_log=$(printf "%s_%s" "log" "$(date +%m%d%H%M%S)")
+
+ps -ef | grep ^cdap* | grep -v grep | grep -v *eugene* | awk '{print $2}' >> ./logs/test/$dfn
+while read line 
+do
+ 
+ft=`ps -ef | grep ^cdap |grep $line | grep -v grep |  awk '{print $9}' | cut -d '-' -f 2`
+if [[ $ft == *"js"* ]]
+then
+ft="node"
+fi
+fn=$(printf "%s_%s_%s" "$ft" "$line" "$dfn_log") 
+echo $fn 
+#./collect_eugene -p $line -s ./logs/$2/$fn.csv -c $count & 
+
+done < ./logs/test/$dfn
+
+rm ./logs/test/$dfn
+
+exit 0
+	

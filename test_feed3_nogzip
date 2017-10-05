@@ -1,0 +1,39 @@
+#!/bin/bash
+FILES="/opt/data/stage01/PT/data/TEST_DATA/feed3_nogzip/new*.txt"
+FEEDNAME="feed3"
+EXEDIR="/opt/data/stage01/PT/etl/utils/etlcl/libexec"
+
+rand=0
+iterator=$1
+
+logfname=$(printf "%s_%s" "$FEEDNAME" "$(date +%m%d%H%M%S)")
+for((i=0;i<iterator;i++))
+do
+
+for f in `ls $FILES| sort -R`
+do
+
+echo "file $f"
+#add file size to logs
+echo "file $f" >> ./logs/$2/$logfname.log
+file_size_mb=`du -k --block-size=1M "$f" | cut -f1`
+echo "filesize $file_size_mb"  >> ./logs/$2/$logfname.log
+
+echo "filesize $file_size_mb"
+echo "logfname $logfname"
+
+#ingest the file
+((time $EXEDIR/./etl-ingest-file.sh feed3 $f -e) >> ./logs/$2/$logfname.log  2>&1) &
+
+#add random sleep
+rand=$(printf "%s" "$(shuf -i 17-51 -n 1)")
+echo "This is the random sleep"
+echo $rand
+sleep $rand
+
+done
+
+done
+
+exit
+
