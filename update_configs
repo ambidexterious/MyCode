@@ -1,5 +1,0 @@
-#!/bin/bash
-/opt/data/stage01/PT/etl/utils/etlcl/bin/./etlcl.sh put-config /home/slptl/etl_techdev/config/awsv.json
-/opt/data/stage01/PT/etl/utils/etlcl/bin/./etlcl.sh put-config /home/slptl/etl_techdev/config/rbss.json
-/opt/data/stage01/PT/etl/utils/etlcl/bin/./etlcl.sh put-config /home/slptl/etl_techdev/config/clf.json
-/opt/data/stage01/PT/etl/utils/etlcl/bin/./etlcl.sh put-config /home/slptl/etl_techdev/config/bridge.json
