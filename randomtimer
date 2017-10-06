@@ -1,3 +1,0 @@
-#!/bin/bash
-rand=$(printf "%s" "$(shuf -i 30-90 -n 1)")
-sleep $rand
